@@ -1,0 +1,17 @@
+# Build output
+**/target/
+**/bin/
+
+# IDE files
+**/.settings/
+**/.project
+**/.classpath
+**/.idea/
+**/*.iml
+
+# Clover reports
+**/.clover/
+
+# OS files
+.DS_Store
+Thumbs.db
