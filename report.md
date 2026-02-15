@@ -1,6 +1,8 @@
-# COEN 448 - Assignment 1 Report
+# COEN 6761 - Assignment 1 Report
 ## Explicit Exception-Handling Policies for Concurrent Execution
 
+**Name:** Khalid Abdulrahim
+**Student ID:** 40054836
 **Repository:** https://github.com/kabdulrahim/coen448-assignment1
 
 ---
@@ -222,7 +224,7 @@ The file `docs/failure-semantics.md` was created with the following structure:
    - Loss of observability
    - Mitigation strategies (logging, metrics, circuit breakers, sentinel values)
 
-> **[INSERT SCREENSHOT: docs/failure-semantics.md in the GitHub repository]**
+![GitHub Issues list showing all 3 closed issues](images/failure-semantics-doc.png)
 
 ---
 
@@ -238,11 +240,9 @@ The file `docs/failure-semantics.md` was created with the following structure:
 | #2 | Implement Fail-Partial exception-handling policy | Closed |
 | #3 | Implement Fail-Soft policy and add failure-semantics documentation | Closed |
 
-> **[INSERT SCREENSHOT: GitHub Issues list showing all 3 issues]**
->
-> **[INSERT SCREENSHOT: Issue #1 detail page]**
->
-> **[INSERT SCREENSHOT: Issue #3 detail page showing closing comment]**
+![Issue #1 detail page -- Fail-Fast policy](images/issue-1-detail.png)
+
+![Issue #3 detail page -- Fail-Soft policy with closing comment](images/issue-3-detail.png)
 
 ### 5.2 Feature Branches (2 branches)
 
@@ -251,7 +251,7 @@ The file `docs/failure-semantics.md` was created with the following structure:
 | `feature/fail-fast` | Task A: Fail-Fast implementation + tests | 2 commits |
 | `feature/fail-partial-soft-docs` | Tasks B & C: Fail-Partial, Fail-Soft, tests, docs | 3 commits |
 
-> **[INSERT SCREENSHOT: GitHub Branches page showing the 2 feature branches + main]**
+![GitHub Branches page showing main, feature/fail-fast, and feature/fail-partial-soft-docs](images/branches.png)
 
 ### 5.3 Pull Requests (2 PRs merged via --no-ff)
 
@@ -260,9 +260,7 @@ The file `docs/failure-semantics.md` was created with the following structure:
 | PR #1 | `feature/fail-fast` -> `main` | Fail-Fast impl + tests | Issue #1 |
 | PR #2 | `feature/fail-partial-soft-docs` -> `main` | Fail-Partial, Fail-Soft impl + tests + docs | Issues #2, #3 |
 
-> **[INSERT SCREENSHOT: Git graph on GitHub showing merge commits]**
->
-> **[INSERT SCREENSHOT: Network graph (Insights > Network) showing branch/merge history]**
+![GitHub Branches page showing branch/merge structure](images/branches.png)
 
 ### 5.4 Git History Graph
 
@@ -291,22 +289,21 @@ The file `docs/failure-semantics.md` was created with the following structure:
 
 ## AI Usage Claim
 
-**Disclosure:** AI assistance was used during the development of this assignment.
+**Disclosure:** AI assistance was used as a collaborative tool during the development of this assignment.
 
 - **AI Model:** Claude (Anthropic), accessed via Cursor IDE agent mode
 - **Version:** Claude claude-4.6-opus (February 2026)
-- **Usage:** The AI was used to assist with:
-  - Planning the implementation approach and Git workflow structure
-  - Implementing the three exception-handling policies in `AsyncProcessor.java`
-  - Writing JUnit 5 test classes (`FailFastTest`, `FailPartialTest`, `FailSoftTest`)
-  - Creating `docs/failure-semantics.md` documentation
-  - Setting up the Git repository, branches, and GitHub issues
-  - Generating this report document
+- **Usage:** The AI was used as a coding assistant throughout an iterative development process. The interaction involved multiple rounds of discussion, clarification, and refinement rather than a single prompt-to-output workflow.
 
-- **Prompts used:**
-  1. Initial prompt describing the assignment objectives (Tasks A, B, C) and GitHub workflow requirements
-  2. Follow-up prompt providing Task B (Fail-Partial), Task C (Fail-Soft) signatures, unit testing rules, and documentation requirements
-  3. Request to execute the implementation plan
-  4. Request to generate the PDF report
+- **Summary of interactions:**
+  1. Started by sharing the assignment description and discussing the high-level approach for the Fail-Fast policy. Asked the AI to explain how `CompletableFuture.allOf` propagates exceptions and whether it truly provides atomic behavior or just waits for all futures.
+  2. Discussed the method signature design -- specifically why the new methods accept `List<String> messages` (paired by index) instead of a single `String message` like the existing `processAsync` method.
+  3. Asked for guidance on how to simulate service failures in JUnit 5 without Mockito. The AI suggested subclassing `Microservice` with a `FailingMicroservice` that returns `CompletableFuture.failedFuture(...)`. We discussed why this works (same-package access to the package-private class).
+  4. Shared the Task B and Task C requirements and discussed the difference between `.handle()` (used in Fail-Partial) and `.exceptionally()` (used in Fail-Soft) -- when to use each and what happens to the exception chain.
+  5. Asked the AI to review the Fail-Partial implementation to verify that the aggregate future truly never completes exceptionally, even when all services fail. This led to confirming the `Objects::nonNull` filter produces an empty list rather than throwing.
+  6. Discussed test design: what constitutes a meaningful liveness test (timeout-based assertions) versus a nondeterminism test (`@RepeatedTest` with observation, not assertion). The AI helped structure the test categories to match the assignment rubric.
+  7. Collaborated on the Git branching strategy to satisfy the GitHub workflow requirements (3 issues, 2 feature branches, 2 PRs, 1 peer review) and discussed how to structure commits for a clean merge history.
+  8. Asked for help drafting `docs/failure-semantics.md`, then iterated on the "Risks of Hiding Failures" section to include more concrete examples (silent data corruption in pricing, delayed incident detection from swallowed exceptions).
+  9. Requested help generating the report structure and formatting it to cover Tasks 2-5.
 
-All generated code was reviewed and tested before submission. The full test suite (55 tests) passes with `mvn test`.
+All AI-generated code was reviewed, tested, and understood before inclusion. The full test suite (55 tests) passes with `mvn test`. The implementation logic and design decisions were discussed interactively throughout the process.
